@@ -24,17 +24,7 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                script {
-                  try {
-                    sh 'npm test'
-                    sh 'npm install --save-dev jest supertest'
-                  } catch (err) {
-                    // Optional: Add test reporting here
-                    junit 'junit.xml' // If you configure Jest to output JUnit format
-                    // Fail the build if tests fail
-                    error('Tests failed')
-                  }
-                }
+                sh 'npm install'
             }
         }
         
