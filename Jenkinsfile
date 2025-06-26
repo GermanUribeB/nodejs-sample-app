@@ -9,7 +9,7 @@ pipeline {
         stage('Setup Node') {
             steps {
                 sh """
-                curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo -E bash -
+                curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo bash -
                 sudo apt-get install -y nodejs
                 """
             }
@@ -24,7 +24,16 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                script {
+                  try {
+                    sh 'npm test'
+                  } catch (err) {
+                    // Optional: Add test reporting here
+                    junit 'junit.xml' // If you configure Jest to output JUnit format
+                    // Fail the build if tests fail
+                    error('Tests failed')
+                  }
+                }
             }
         }
         
