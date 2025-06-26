@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../app'); // Make sure to export your app in app.js
+const app = require('../app'); // Make sure this path is correct
 
 describe('GET /', () => {
   it('should return 200 and welcome message', async () => {
