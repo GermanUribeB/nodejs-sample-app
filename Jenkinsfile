@@ -43,10 +43,16 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 sshagent(['vagrant-staging-ssh']) {
-                    sh """
-                    scp -o StrictHostKeyChecking=no -r * vagrant@192.168.60.20:/var/www/node-app/
-                    ssh vagrant@192.168.60.20 "cd /var/www/node-app && npm install --production && pm2 restart app"
-                    """
+                    sh '''
+                    # Copy files to staging
+                    scp -o StrictHostKeyChecking=no -r ./* vagrant@192.168.60.20:/var/www/node-app/
+                    
+                    # Install dependencies and restart
+                    ssh vagrant@192.168.60.20 "cd /var/www/node-app && \
+                        npm install --production && \
+                        pm2 start app.js --name node-app || \
+                        pm2 restart node-app"
+                    '''
                 }
             }
         }
